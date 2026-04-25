@@ -61,6 +61,11 @@ signatures! {
 		1602..1648 => "55 8B EC 81 EC 98 00 00 00 A1 ?? ?? ?? ?? 33 C5 89 45 FC 8B 55",
 		..1602 => (call, "E8 ?? ?? ?? ?? 83 C4 2C 89 45 F4 89 55 F8 8B 45 F4 8B 55 F8 5F 5E 5B 8B E5 5D C3 CC 55 8B EC 83 EC 0C 53 8B 5D 10 8D 45 FF")
 	),
+	hook_call_proc_by_id => version_dependent_signature!(
+		1648.. => "55 8B EC 81 EC 9C 00 00 00 A1 ?? ?? ?? ?? 33 C5 89 45 ?? 8B 55 ?? 8B 45 ??",
+		1602..1648 => "55 8B EC 81 EC 98 00 00 00 A1 ?? ?? ?? ?? 33 C5 89 45 FC 8B 55",
+		..1602 => (call, "E8 ?? ?? ?? ?? 83 C4 2C 89 45 F4 89 55 F8 8B 45 F4 8B 55 F8 5F 5E 5B 8B E5 5D C3 CC 55 8B EC 83 EC 0C 53 8B 5D 10 8D 45 FF")
+	),
 	get_variable => version_dependent_signature!(
 		1648.. => "55 8B EC 6A FF 68 ?? ?? ?? ?? 64 A1 ?? ?? ?? ?? 50 83 EC 0C 53 56 57 A1 ?? ?? ?? ?? 33 C5 50 8D 45 ?? 64 A3 ?? ?? ?? ?? 8B 5D ?? 8B 75 ??",
 		1615..1648 => "55 8B EC 6A FF 68 ?? ?? ?? ?? 64 A1 00 00 00 00 50 83 EC 28 A1 ?? ?? ?? ?? 33 C5 89 45 F0 53 56 57 50 8D 45 F4 64 A3 00 00 00 00 8B 5D",
@@ -109,7 +114,10 @@ signatures! {
 		1615..1648 => "55 8B EC 83 EC 08 53 8B 5D 08 0F B6 C3 48 56 57 83 F8 53 0F 87 23 01 00 00 0F B6 80 ?? ?? ?? ?? 8B 4D 10 FF 24 85 ?? ?? ?? ?? 8B 7D 0C 6A 0F 57 53 E8 ?? ?? ?? ?? 50 E8 ?? ?? ?? ?? 83 C4 10 85 C0 0F 84 02 01 00 00 8B 08 8B 40 0C 85 C0 0F 84 F5 00 00 00 8B 75 14 8B 5D 10",
 		..1614 => "55 8B EC 8B 4D 08 83 EC 0C 0F B6 C1 48 53 83 F8 53 0F 87 ?? ?? ?? ?? 0F B6 ?? ?? ?? ?? ?? 8B 55 10 FF 24 ?? ?? ?? ?? ?? 6A 0F FF 75 0C 51 E8 ?? ?? ?? ?? 50 E8 ?? ?? ?? ?? 83 C4 10 85 C0 0F 84 ?? ?? ?? ?? 8B 48 0C 8B 10 85 C9 0F 84 ?? ?? ?? ?? 8B 45 14 8B 5D 10"
 	),
-	get_length => universal_signature!("55 8B EC 8B 4D ?? 83 EC ?? 0F B6 C1 48 53 56 57 83 F8 ?? 0F 87 ?? ?? ?? ??"
+	get_length => version_dependent_signature!(
+		1648.. => "55 8B EC 8B 4D ?? 83 EC ?? 0F B6 C1 48 53 56 57 83 F8 ?? 0F 87 ?? ?? ?? ??",
+		1602..1648 => "55 8B EC 8B 4D 08 83 EC 18 0F B6 C1 48 53 56 57 83 F8 53 0F 87 F5 01 00 00",
+		..1602 => "55 8B EC 8B 4D ?? 83 EC ?? 0F B6 C1 48 53 56 57 83 F8 ?? 0F 87 ?? ?? ?? ??"
 	),
 	get_misc_by_id => version_dependent_signature!(
 		1615.. => (call, "E8 ?? ?? ?? ?? 83 C4 04 85 C0 74 08 0F B7 38 8B 70 08 EB 04 33 FF 33 F6 0F B7 C7 50 89 45 F8 E8 ?? ?? ?? ??"),
@@ -148,55 +156,113 @@ pub const BYONDCORE: &str = "libbyond.so";
 #[cfg(unix)]
 signatures! {
 	get_proc_array_entry => version_dependent_signature!(
+		1647..1648 => "8B 44 24 04 39 05 ?? ?? ?? ?? 76 ?? 6B C0 2C 03 05 ?? ?? ?? ?? C3",
 		1584.. => (call, "E8 ?? ?? ?? ?? 0F B7 F6 89 C7 89 B5 ?? ?? ?? ?? 89 34 24 E8 ?? ?? ?? ??"),
 		..1584 => (call, "E8 ?? ?? ?? ?? 8B 00 89 04 24 E8 ?? ?? ?? ?? 8B 00 89 44 24 ?? 8D 45 ??")
 	),
-	get_string_id => universal_signature!("55 89 E5 57 56 89 CE 53 89 D3 83 EC 5C 8B 55 ?? 85 C0 88 55 ?? 0F 84 ?? ?? ?? ??"),
-	call_proc_by_id => universal_signature!(call, "E8 ?? ?? ?? ?? 8B 45 ?? 8B 55 ?? 89 45 ?? 89 55 ?? 8B 55 ?? 8B 4D ?? 8B 5D ??"),
-	get_variable => universal_signature!("55 89 E5 81 EC C8 00 00 00 8B 55 ?? 89 5D ?? 8B 5D ?? 89 75 ?? 8B 75 ??"),
+	get_string_id => version_dependent_signature!(
+		1647..1648 => "55 57 56 89 CE 53 89 D3 83 EC 4C 8B 54 24 60 88 54 24 0C 85 C0",
+		..1647 => "55 89 E5 57 56 89 CE 53 89 D3 83 EC 5C 8B 55 ?? 85 C0 88 55 ?? 0F 84 ?? ?? ?? ??"
+	),
+	call_proc_by_id => version_dependent_signature!(
+		1647..1648 => "55 31 C0 57 56 53 81 EC AC 00 00 00 F3 0F 7E 8C 24 D8 00 00 00 8B 8C 24 D0 00 00 00",
+		..1647 => (call, "E8 ?? ?? ?? ?? 8B 45 ?? 8B 55 ?? 89 45 ?? 89 55 ?? 8B 55 ?? 8B 4D ?? 8B 5D ??")
+	),
+	hook_call_proc_by_id => version_dependent_signature!(
+		// 1647 normal DM dispatch enters through a ProcInstance executor, not the by-id wrapper.
+		1647..1648 => "55 89 E5 57 56 53 81 EC 5C 05 00 00 89 85 80 FC FF FF A1 ?? ?? ?? ?? 89 95 D8 FC FF FF",
+		..1647 => (call, "E8 ?? ?? ?? ?? 8B 45 ?? 8B 55 ?? 89 45 ?? 89 55 ?? 8B 55 ?? 8B 4D ?? 8B 5D ??")
+	),
+	get_variable => version_dependent_signature!(
+		1647..1648 => "55 89 E5 57 56 53 83 EC 5C F3 0F 7E 4D 0C 8B 75 08 66 0F 6F C1 66 0F 7E C8",
+		..1647 => "55 89 E5 81 EC C8 00 00 00 8B 55 ?? 89 5D ?? 8B 5D ?? 89 75 ?? 8B 75 ??"
+	),
 	set_variable => version_dependent_signature!(
+		1647..1648 => "55 89 E5 57 56 53 83 EC 7C F3 0F 7E 55 08 8B 75 10 66 0F 6F C2 66 0F 7E D0",
 		1560.. => (call, "E8 ?? ?? ?? ?? 8B 45 ?? 8D 65 ?? 5B 5E 5F 5D C3 8D B4 26 00 00 00 00 8B 40 ??"),
 		1543..1560 => "55 89 E5 81 EC A8 00 00 00 8B 55 ?? 89 5D ?? 8B 4D ?? 89 7D ?? 8B 5D ??",
 		..1543 => "55 89 E5 81 EC A8 00 00 00 8B 55 ?? 8B 45 ?? 89 5D ?? 8B 5D ?? 89 7D ??"
 	),
 
-	get_string_table_entry => universal_signature!("55 89 E5 83 EC 18 8B 45 ?? 39 05 ?? ?? ?? ?? 76 ?? 8B 15 ?? ?? ?? ?? 8B 04 ??"),
+	get_string_table_entry => version_dependent_signature!(
+		1647..1648 => "56 53 83 EC 14 8B 44 24 20 39 05 ?? ?? ?? ?? 76 ?? 8B 15 ?? ?? ?? ?? 8B 04 82 85 C0 74 ?? 83 C4 14 5B 5E C3",
+		..1647 => "55 89 E5 83 EC 18 8B 45 ?? 39 05 ?? ?? ?? ?? 76 ?? 8B 15 ?? ?? ?? ?? 8B 04 ??"
+	),
 	call_datum_proc_by_name => version_dependent_signature!(
+		1647..1648 => "55 57 89 C7 56 89 D6 53 89 CB 81 EC F8 00 00 00 C6 44 24 47 00 FF 32 E8 ?? ?? ?? ??",
 		1606.. => "55 89 E5 57 56 89 CE 53 89 D3 83 EC ?? 0F B6 55 ?? 89 45 ?? 8B 45 ?? 8B 7D ?? C6 45 E7 ?? 0F B6 CA 89 45 B0 8D 45 ?? 89 44 24 ?? 8B 45 ?? 89 ?? BC 31 C9 88 ?? BB 8B 55 ?? C7 44 24 ?? 01 00 00 00",
+		1602..1603 => "55 89 E5 57 56 89 CE 53 89 D3 83 EC 6C 0F B6 55 08 89 45 B4 8B 45 14 8B 7D 10 C6 45 E7 00 0F B6 CA 89 45 B0 8D 45 E7 89 44 24 08 8B 45 B0 89 4D BC 31 C9 88 55 BB 8B 55 0C C7 44 24 0C 01 00 00 00",
 		..1606 => "55 89 E5 57 56 53 83 EC 5C 8B 55 ?? 0F B6 45 ?? 8B 4D ?? 8B 5D ?? 89 14 24 8B 55 ?? 88 45 ?? 0F B6 F8 8B 75 ?? 8D 45 ?? 89 44 24 ?? 89 F8 89 4C 24 ?? 31 C9 C6 45 ?? 00 C7 44 24 ?? 01 00 00 00"
 	),
 
 	dec_ref_count => version_dependent_signature!(
+		1647..1648 => "55 89 E5 56 53 83 EC 20 F3 0F 7E 4D 08 66 0F 6F C1 66 0F 7E C9 66 0F 73 D0 20 66 0F 7E C3 80 F9 4A",
 		1543.. => (call, "E8 ?? ?? ?? ?? C7 06 00 00 00 00 C7 46 ?? 00 00 00 00 A1 ?? ?? ?? ?? 0F B7 50 ??"),
 		..1543 => (call, "E8 ?? ?? ?? ?? 8B 4D ?? C7 44 24 ?? 00 00 00 00 C7 44 24 ?? 00 00 00 00 89 0C 24")
 	),
-	inc_ref_count => universal_signature!(call, "E8 ?? ?? ?? ?? 8B 43 ?? 80 48 ?? 04 8B 5D ?? 8B 75 ?? 8B 7D ?? 89 EC 5D"),
+	inc_ref_count => version_dependent_signature!(
+		1647..1648 => "55 89 E5 56 53 83 EC 20 F3 0F 7E 4D 08 66 0F 6F C1 66 0F 7E C9 66 0F 73 D0 20 66 0F 7E C0 80 F9 4A",
+		..1647 => (call, "E8 ?? ?? ?? ?? 8B 43 ?? 80 48 ?? 04 8B 5D ?? 8B 75 ?? 8B 7D ?? 89 EC 5D")
+	),
 	get_assoc_element => version_dependent_signature!(
+		1647..1648 => "55 89 E5 57 56 53 83 EC 3C F3 0F 7E 45 0C 8B 7D 08 0F 29 45 B8 66 0F 7E C0 66 0F 7E 45 C8 66 0F 73 D0 20",
 		1602.. => "55 89 E5 83 EC ?? ?? ?? ?? ?? 5D F4 89 D3 89 75 F8 89 D6 89 7D FC 89 CF 89 45 B4 0F 84 B7 00 00 ??",
 		..1602 => "55 89 E5 83 EC 68 89 4D ?? B9 7B 00 00 00 89 5D ?? 89 D3 89 75 ?? 89 C6"
 	),
 
 	set_assoc_element => version_dependent_signature!(
+		1647..1648 => "55 89 E5 57 56 53 83 EC 6C F3 0F 7E 45 08 F3 0F 7E 4D 10 66 0F 7E C7 0F 29 45 B8 66 0F 73 D0 20",
 		1602.. => "55 89 E5 83 EC 68 89 75 F8 8B 75 08 89 5D F4 89 C3 8B 45 0C 89 7D FC 80 FB 3C 89 D7 88 5D BF 89 ??",
 		..1602 => "55 B9 7C 00 00 00 89 E5 83 EC 58 89 7D ?? 8B 7D ?? 89 5D ?? 89 C3 8B 45 ??"
 	),
 
-	create_list => universal_signature!("55 89 E5 57 56 53 83 EC 2C A1 ?? ?? ?? ?? 8B 75 ?? 85 C0 0F 84 ?? ?? ?? ??"),
-	append_to_list => universal_signature!("55 89 E5 83 EC 38 3C 54 89 5D ?? 8B 5D ?? 89 75 ?? 8B 75 ?? 89 7D ?? 76 ??"),
-	remove_from_list => universal_signature!("55 89 E5 83 EC 48 3C 54 89 5D ?? 89 C3 89 75 ?? 8B 75 ?? 89 7D ?? 8B 7D ??"),
-	get_length => universal_signature!("55 89 E5 57 56 53 83 EC 6C 8B 45 ?? 8B 5D ?? 3C 54 76 ?? 31 F6 8D 65 ??"),
-	get_misc_by_id => universal_signature!(call, "E8 ?? ?? ?? ?? 0F B7 55 ?? 03 1F 0F B7 4B ?? 89 8D ?? ?? ?? ?? 0F B7 5B ??"),
-	runtime => universal_signature!(call, "E8 ?? ?? ?? ?? 31 C0 8D B4 26 00 00 00 00 8B 5D ?? 8B 75 ?? 8B 7D ?? 89 EC"),
-	suspended_procs => universal_signature!(1, "A3 ?? ?? ?? ?? 8D 14 ?? 73 ?? 8D 74 26 00 83 C0 01 8B 14 ?? 39 C3 89 54 ?? ??"),
-	suspended_procs_buffer => universal_signature!(2, "89 35 ?? ?? ?? ?? C7 04 24 ?? ?? ?? ?? E8 ?? ?? ?? ?? 8B 45 ?? 83 C0 08"),
+	create_list => version_dependent_signature!(
+		1647..1648 => "55 57 56 53 83 EC 0C A1 ?? ?? ?? ?? 8B 7C 24 20 85 C0 0F 84",
+		..1647 => "55 89 E5 57 56 53 83 EC 2C A1 ?? ?? ?? ?? 8B 75 ?? 85 C0 0F 84 ?? ?? ?? ??"
+	),
+	append_to_list => version_dependent_signature!(
+		1647..1648 => "56 66 0F 6E CA 66 0F 6E C0 53 66 0F 62 C1 66 0F 6F C8 66 0F 7E C6 66 0F 73 D1 20 89 F1 83 EC 14",
+		..1647 => "55 89 E5 83 EC 38 3C 54 89 5D ?? 8B 5D ?? 89 75 ?? 8B 75 ?? 89 7D ?? 76 ??"
+	),
+	remove_from_list => version_dependent_signature!(
+		1647..1648 => "55 66 0F 6E CA 66 0F 6E C0 57 66 0F 62 C1 56 66 0F 6F C8 66 0F 7E C7 53 66 0F 73 D1 20 89 F9",
+		..1647 => "55 89 E5 83 EC 48 3C 54 89 5D ?? 89 C3 89 75 ?? 8B 75 ?? 89 7D ?? 8B 7D ??"
+	),
+	get_length => version_dependent_signature!(
+		1647..1648 => "55 57 56 53 83 EC 3C F3 0F 7E 4C 24 50 66 0F 6F C1 66 0F 7E C9 66 0F 73 D0 20 66 0F 7E C6",
+		..1647 => "55 89 E5 57 56 53 83 EC 6C 8B 45 ?? 8B 5D ?? 3C 54 76 ?? 31 F6 8D 65 ??"
+	),
+	get_misc_by_id => version_dependent_signature!(
+		1647..1648 => (call, "E8 ?? ?? ?? ?? 83 C4 10 85 C0 0F 85 ?? ?? ?? ?? E9 ?? ?? ?? ?? 8D 76 00 83 EC 04 6A 00 83 EC 08 66 0F D6 0C 24 E8"),
+		..1647 => (call, "E8 ?? ?? ?? ?? 0F B7 55 ?? 03 1F 0F B7 4B ?? 89 8D ?? ?? ?? ?? 0F B7 5B ??")
+	),
+	runtime => version_dependent_signature!(
+		1647..1648 => "55 89 E5 56 53 83 EC 30 8B 15 ?? ?? ?? ?? 85 D2 0F 84 ?? ?? ?? ?? 0F B6 42 6D 3C 01",
+		..1647 => (call, "E8 ?? ?? ?? ?? 31 C0 8D B4 26 00 00 00 00 8B 5D ?? 8B 75 ?? 8B 7D ?? 89 EC")
+	),
+	suspended_procs => version_dependent_signature!(
+		1647..1648 => (26, "55 57 89 C7 56 53 83 EC 1C 8B 0D ?? ?? ?? ?? 80 48 04 04 8B A8 88 00 00 00 A1 ?? ?? ?? ?? 89 4C 24 0C 8B 35 ?? ?? ?? ?? 89 CA 89 44 24 08 89 C3"),
+		..1647 => (1, "A3 ?? ?? ?? ?? 8D 14 ?? 73 ?? 8D 74 26 00 83 C0 01 8B 14 ?? 39 C3 89 54 ?? ??")
+	),
+	suspended_procs_buffer => version_dependent_signature!(
+		1647..1648 => (36, "55 57 89 C7 56 53 83 EC 1C 8B 0D ?? ?? ?? ?? 80 48 04 04 8B A8 88 00 00 00 A1 ?? ?? ?? ?? 89 4C 24 0C 8B 35 ?? ?? ?? ?? 89 CA 89 44 24 08 89 C3"),
+		..1647 => (2, "89 35 ?? ?? ?? ?? C7 04 24 ?? ?? ?? ?? E8 ?? ?? ?? ?? 8B 45 ?? 83 C0 08")
+	),
 	to_string => version_dependent_signature!(
+		1647..1648 => "55 89 E5 57 56 53 83 EC 3C 0F B6 45 08 3C 23 77 47 84 C0 74 33",
+		1602..1603 => (call, "E8 ?? ?? ?? ?? 89 04 24 E8 ?? ?? ?? ?? 8B 00 C9 C3"),
 		1602.. => "55 89 E5 83 ?? ?? 89 5D F4 8D ?? ?? 89 75 F8 89 7D FC 80 ?? ?? ?? ?? ?? B8",
 		1560..1602 => (call, "E8 ?? ?? ?? ?? 89 04 24 E8 ?? ?? ?? ?? 8B 00 8D 4D ?? 89 0C 24"),
 		1543..1560 => "55 89 E5 83 EC 68 A1 ?? ?? ?? ?? 8B 15 ?? ?? ?? ?? 8B 0D ?? ?? ?? ?? 89 5D ??",
 		..1543 => "55 89 E5 83 EC 58 89 5D ?? 8B 5D ?? 89 75 ?? 8B 75 ?? 89 7D ?? 80 FB 54"
 	),
-	current_execution_context => universal_signature!(1, "A1 ?? ?? ?? ?? C7 44 24 ?? 00 00 00 00 C7 44 24 ?? 00 00 00 00 89 74 24"),
+	current_execution_context => version_dependent_signature!(
+		1647..1648 => (2, "8B 15 ?? ?? ?? ?? 89 50 04 8B 85 ?? ?? ?? ?? 8B 58 18 80 7B 6B 00 89 1D ?? ?? ?? ??"),
+		1602..1603 => (2, "8B 15 ?? ?? ?? ?? 8B 12 8B 4A 0C 8B 52 08 89 44 24 04"),
+		..1602 => (1, "A1 ?? ?? ?? ?? C7 44 24 ?? 00 00 00 00 C7 44 24 ?? 00 00 00 00 89 74 24")
+	),
 	variable_names => version_dependent_signature!(
+		1647..1648 => (12, "8B 78 08 0F B7 10 89 75 08 31 DB A1 ?? ?? ?? ?? 0F B7 F3 89 45 A8 89 75 A0 EB 30"),
 		1543.. => (1, "A1 ?? ?? ?? ?? 8B 13 8B 39 8B 75 ?? 8B 14 ?? 89 7D ?? 8B 3C ?? 83 EE 02"),
 		..1543 => (2, "8B 35 ?? ?? ?? ?? 89 5D ?? 0F B7 08 89 75 ?? 66 C7 45 ?? 00 00 89 7D ??")
 	)
@@ -253,6 +319,7 @@ byond_ffi_fn! { auxtools_init(_input) {
 			(suspended_procs as *mut raw_types::procs::SuspendedProcs),
 			(suspended_procs_buffer as *mut raw_types::procs::SuspendedProcsBuffer),
 			call_proc_by_id,
+			hook_call_proc_by_id,
 			call_datum_proc_by_name,
 			get_proc_array_entry,
 			get_string_id,
@@ -273,6 +340,8 @@ byond_ffi_fn! { auxtools_init(_input) {
 		}
 
 		unsafe {
+			raw_types::funcs::byond_build = version::get().1;
+			raw_types::funcs::CALL_PROC_BY_ID_HOOK_TARGET = hook_call_proc_by_id;
 			raw_types::funcs::CURRENT_EXECUTION_CONTEXT = current_execution_context;
 			raw_types::funcs::SUSPENDED_PROCS = suspended_procs;
 			raw_types::funcs::SUSPENDED_PROCS_BUFFER = suspended_procs_buffer;
@@ -423,7 +492,9 @@ byond_ffi_fn! { auxtools_check_signatures(_input) {
 	}
 	let mut missing = Vec::<&'static str>::new();
 	for (name, found) in SIGNATURES0.check_all(&byondcore) {
-		if !found {
+		let active_detour = get_init_level() == InitLevel::Partial
+			&& matches!(name, "call_proc_by_id" | "hook_call_proc_by_id" | "runtime");
+		if !found && !active_detour {
 			missing.push(name);
 		}
 	}
