@@ -1,6 +1,7 @@
 /target
 /result
 /.vscode
+/changelogs
 *.o
 *.dmb
 *.int
