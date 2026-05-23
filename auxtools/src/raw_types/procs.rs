@@ -27,12 +27,12 @@ pub union ProcMetadata {
 impl ProcMetadata {
 	pub fn get_bytecode(&self) -> misc::BytecodeId {
 		static REDIRECT: OnceLock<fn(&ProcMetadata) -> misc::BytecodeId> = OnceLock::new();
-		REDIRECT.get_or_init(|| unsafe {
-			match crate::version::BYOND_VERSION_MINOR {
+		REDIRECT.get_or_init(||
+			match crate::version::get().build {
 				..=1627 => Self::get_bytecode_pre1630,
 				_ => Self::get_bytecode_post1630
 			}
-		})(self)
+		)(self)
 	}
 
 	#[inline(never)]
@@ -47,12 +47,12 @@ impl ProcMetadata {
 
 	pub fn get_locals(&self) -> misc::LocalsId {
 		static REDIRECT: OnceLock<fn(&ProcMetadata) -> misc::LocalsId> = OnceLock::new();
-		REDIRECT.get_or_init(|| unsafe {
-			match crate::version::BYOND_VERSION_MINOR {
+		REDIRECT.get_or_init(||
+			match crate::version::get().build {
 				..=1627 => Self::get_locals_pre1630,
 				_ => Self::get_locals_post1630
 			}
-		})(self)
+		)(self)
 	}
 
 	#[inline(never)]
@@ -67,12 +67,12 @@ impl ProcMetadata {
 
 	pub fn get_parameters(&self) -> misc::ParametersId {
 		static REDIRECT: OnceLock<fn(&ProcMetadata) -> misc::ParametersId> = OnceLock::new();
-		REDIRECT.get_or_init(|| unsafe {
-			match crate::version::BYOND_VERSION_MINOR {
+		REDIRECT.get_or_init(||
+			match crate::version::get().build {
 				..=1627 => Self::get_parameters_pre1630,
 				_ => Self::get_parameters_post1630
 			}
-		})(self)
+		)(self)
 	}
 
 	#[inline(never)]
@@ -131,12 +131,12 @@ impl ProcInstance {
 
 	pub fn args_count(&self) -> u32 {
 		static REDIRECT: OnceLock<fn(&ProcInstance) -> u32> = OnceLock::new();
-		REDIRECT.get_or_init(|| unsafe {
-			match crate::version::BYOND_VERSION_MAJOR {
+		REDIRECT.get_or_init(||
+			match crate::version::get().build {
 				..516 => Self::args_count_pre516,
 				_ => Self::args_count_post516
 			}
-		})(self)
+		)(self)
 	}
 
 	#[inline(never)]
@@ -151,12 +151,12 @@ impl ProcInstance {
 
 	pub fn args(&self) -> *mut values::Value {
 		static REDIRECT: OnceLock<fn(&ProcInstance) -> *mut values::Value> = OnceLock::new();
-		REDIRECT.get_or_init(|| unsafe {
-			match crate::version::BYOND_VERSION_MAJOR {
+		REDIRECT.get_or_init(||
+			match crate::version::get().build {
 				..516 => Self::args_pre516,
 				_ => Self::args_post516
 			}
-		})(self)
+		)(self)
 	}
 
 	#[inline(never)]
@@ -171,12 +171,12 @@ impl ProcInstance {
 
 	pub fn time_to_resume(&self) -> u32 {
 		static REDIRECT: OnceLock<fn(&ProcInstance) -> u32> = OnceLock::new();
-		REDIRECT.get_or_init(|| unsafe {
-			match crate::version::BYOND_VERSION_MAJOR {
+		REDIRECT.get_or_init(||
+			match crate::version::get().build {
 				..516 => Self::time_to_resume_pre516,
 				_ => Self::time_to_resume_post516
 			}
-		})(self)
+		)(self)
 	}
 }
 #[repr(C)]
@@ -213,12 +213,12 @@ pub union ExecutionContext {
 impl ExecutionContext {
 	pub fn proc_instance(&self) -> *mut ProcInstance {
 		static REDIRECT: OnceLock<fn(&ExecutionContext) -> *mut ProcInstance> = OnceLock::new();
-		REDIRECT.get_or_init(|| unsafe {
-			match (crate::version::BYOND_VERSION_MAJOR, crate::version::BYOND_VERSION_MINOR) {
+		REDIRECT.get_or_init(||
+			match (crate::version::get().major, crate::version::get().build) {
 				(..=515, _) | (516, ..=1667) => Self::proc_instance_pre1668,
 				_ => Self::proc_instance_post1668,
 			}
-		})(self)
+		)(self)
 	}
 
 	#[inline(never)]
@@ -233,12 +233,12 @@ impl ExecutionContext {
 
 	pub fn parent_context(&self) -> *mut ExecutionContext {
 		static REDIRECT: OnceLock<fn(&ExecutionContext) -> *mut ExecutionContext> = OnceLock::new();
-		REDIRECT.get_or_init(|| unsafe {
-			match (crate::version::BYOND_VERSION_MAJOR, crate::version::BYOND_VERSION_MINOR) {
+		REDIRECT.get_or_init(||
+			match (crate::version::get().major, crate::version::get().build) {
 				(..=515, _) | (516, ..=1667) => Self::parent_context_pre1668,
 				_ => Self::parent_context_post1668,
 			}
-		})(self)
+		)(self)
 	}
 
 	#[inline(never)]
@@ -253,12 +253,12 @@ impl ExecutionContext {
 
 	pub fn filename(&self) -> strings::StringId {
 		static REDIRECT: OnceLock<fn(&ExecutionContext) -> strings::StringId> = OnceLock::new();
-		REDIRECT.get_or_init(|| unsafe {
-			match (crate::version::BYOND_VERSION_MAJOR, crate::version::BYOND_VERSION_MINOR) {
+		REDIRECT.get_or_init(||
+			match (crate::version::get().major, crate::version::get().build) {
 				(..=515, _) | (516, ..=1667) => Self::filename_pre1668,
 				_ => Self::filename_post1668,
 			}
-		})(self)
+		)(self)
 	}
 
 	#[inline(never)]
@@ -273,12 +273,12 @@ impl ExecutionContext {
 
 	pub fn line(&self) -> u32 {
 		static REDIRECT: OnceLock<fn(&ExecutionContext) -> u32> = OnceLock::new();
-		REDIRECT.get_or_init(|| unsafe {
-			match (crate::version::BYOND_VERSION_MAJOR, crate::version::BYOND_VERSION_MINOR) {
+		REDIRECT.get_or_init(||
+			match (crate::version::get().major, crate::version::get().build) {
 				(..=515, _) | (516, ..=1667) => Self::line_pre1668,
 				_ => Self::line_post1668,
 			}
-		})(self)
+		)(self)
 	}
 
 	#[inline(never)]
@@ -293,12 +293,12 @@ impl ExecutionContext {
 
 	pub fn bytecode(&self) -> *mut u32 {
 		static REDIRECT: OnceLock<fn(&ExecutionContext) -> *mut u32> = OnceLock::new();
-		REDIRECT.get_or_init(|| unsafe {
-			match (crate::version::BYOND_VERSION_MAJOR, crate::version::BYOND_VERSION_MINOR) {
+		REDIRECT.get_or_init(||
+			match (crate::version::get().major, crate::version::get().build) {
 				(..=515, _) | (516, ..=1667) => Self::bytecode_pre1668,
 				_ => Self::bytecode_post1668,
 			}
-		})(self)
+		)(self)
 	}
 
 	#[inline(never)]
@@ -313,12 +313,12 @@ impl ExecutionContext {
 
 	pub fn bytecode_offset(&self) -> u16 {
 		static REDIRECT: OnceLock<fn(&ExecutionContext) -> u16> = OnceLock::new();
-		REDIRECT.get_or_init(|| unsafe {
-			match (crate::version::BYOND_VERSION_MAJOR, crate::version::BYOND_VERSION_MINOR) {
+		REDIRECT.get_or_init(||
+			match (crate::version::get().major, crate::version::get().build) {
 				(..=515, _) | (516, ..=1667) => Self::bytecode_offset_pre1668,
 				_ => Self::bytecode_offset_post1668,
 			}
-		})(self)
+		)(self)
 	}
 
 	#[inline(never)]
@@ -333,12 +333,12 @@ impl ExecutionContext {
 
 	pub fn dot(&self) -> values::Value {
 		static REDIRECT: OnceLock<fn(&ExecutionContext) -> values::Value> = OnceLock::new();
-		REDIRECT.get_or_init(|| unsafe {
-			match (crate::version::BYOND_VERSION_MAJOR, crate::version::BYOND_VERSION_MINOR) {
+		REDIRECT.get_or_init(||
+			match (crate::version::get().major, crate::version::get().build) {
 				(..=515, _) | (516, ..=1667) => Self::dot_pre1668,
 				_ => Self::dot_post1668,
 			}
-		})(self)
+		)(self)
 	}
 
 	#[inline(never)]
@@ -353,12 +353,12 @@ impl ExecutionContext {
 
 	pub fn dot_ptr(&mut self) -> *mut values::Value {
 		static REDIRECT: OnceLock<fn(&mut ExecutionContext) -> *mut values::Value> = OnceLock::new();
-		REDIRECT.get_or_init(|| unsafe {
-			match (crate::version::BYOND_VERSION_MAJOR, crate::version::BYOND_VERSION_MINOR) {
+		REDIRECT.get_or_init(||
+			match (crate::version::get().major, crate::version::get().build) {
 				(..=515, _) | (516, ..=1667) => Self::dot_ptr_pre1668,
 				_ => Self::dot_ptr_post1668,
 			}
-		})(self)
+		)(self)
 	}
 
 	#[inline(never)]
@@ -373,12 +373,12 @@ impl ExecutionContext {
 
 	pub fn locals(&self) -> *mut values::Value {
 		static REDIRECT: OnceLock<fn(&ExecutionContext) -> *mut values::Value> = OnceLock::new();
-		REDIRECT.get_or_init(|| unsafe {
-			match (crate::version::BYOND_VERSION_MAJOR, crate::version::BYOND_VERSION_MINOR) {
+		REDIRECT.get_or_init(||
+			match (crate::version::get().major, crate::version::get().build) {
 				(..=515, _) | (516, ..=1667) => Self::locals_pre1668,
 				_ => Self::locals_post1668,
 			}
-		})(self)
+		)(self)
 	}
 
 	#[inline(never)]
@@ -393,12 +393,12 @@ impl ExecutionContext {
 
 	pub fn locals_count(&self) -> u16 {
 		static REDIRECT: OnceLock<fn(&ExecutionContext) -> u16> = OnceLock::new();
-		REDIRECT.get_or_init(|| unsafe {
-			match (crate::version::BYOND_VERSION_MAJOR, crate::version::BYOND_VERSION_MINOR) {
+		REDIRECT.get_or_init(||
+			match (crate::version::get().major, crate::version::get().build) {
 				(..=515, _) | (516, ..=1667) => Self::locals_count_pre1668,
 				_ => Self::locals_count_post1668,
 			}
-		})(self)
+		)(self)
 	}
 
 	#[inline(never)]

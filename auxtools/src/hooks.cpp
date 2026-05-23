@@ -15,6 +15,7 @@ struct ProcInstance_1647 {
 	uint32_t argslist_idx;
 	uint32_t unk_1;
 	uint32_t unk_2;
+	uint32_t unk_3;
 	uint32_t args_count;
 	Value* args;
 };

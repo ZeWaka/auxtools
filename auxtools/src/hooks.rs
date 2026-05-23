@@ -1,3 +1,5 @@
+use log::{info, warn};
+
 use std::{
 	cell::RefCell,
 	ffi::{c_void, CStr},
@@ -87,7 +89,7 @@ pub fn init() -> Result<(), String> {
 		runtime_hook.enable().unwrap();
 		runtime_original = runtime_hook.trampoline() as *const () as *const c_void;
 
-		let call_proc_trampoline = if cfg!(unix) && crate::version::get().1 >= 1647 {
+		let call_proc_trampoline = if cfg!(unix) && crate::version::get().build >= 1647 {
 			call_proc_by_id_hook_trampoline_1647 as *const ()
 		} else {
 			call_proc_by_id_hook_trampoline as *const ()
@@ -157,6 +159,7 @@ impl Proc {
 #[no_mangle]
 extern "C" fn on_runtime(error: *const c_char) {
 	let str = unsafe { CStr::from_ptr(error) }.to_string_lossy();
+	warn!("Runtime hooked! Reason: {str:?}");
 
 	for func in inventory::iter::<RuntimeErrorHook> {
 		func.0(&str);
@@ -185,6 +188,7 @@ extern "C" fn call_proc_by_id_hook(
 
 		match hook_entry {
 		Some((hook, path)) => {
+			info!("Proc ({path}) hooked!\nproc_id: {}\nnum_args: {}\nargs_ptr: 0x{:08X}", proc_id.0, num_args, args_ptr as usize);
 			let (src, usr, args) = unsafe {
 				(
 					Value::from_raw(src_raw),

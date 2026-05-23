@@ -25,7 +25,9 @@ extern "C" fn dl_phdr_callback(info: *mut dl_phdr_info, _size: usize, data: *mut
 	}
 
 	let headers: &'static [Elf32_Phdr] = unsafe { std::slice::from_raw_parts(info.dlpi_phdr, info.dlpi_phnum as usize) };
-	for elf_header in headers.iter().filter(|p| p.p_type == PT_LOAD) {
+
+	// checks whether the segment is loadable and executable (executable flag is 1), adds to memory areas if it is
+	for elf_header in headers.iter().filter(|p| p.p_type == PT_LOAD && p.p_flags & 1 == 1) {
 		let start = (info.dlpi_addr + elf_header.p_vaddr) as usize;
 		cb_data.memory_areas.push((start, elf_header.p_memsz as usize));
 	}
